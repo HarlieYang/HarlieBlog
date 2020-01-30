@@ -1,0 +1,10 @@
+.sort-table{
+    padding: 40px;
+    box-sizing: border-box;
+}
+.label-sort-name{
+    font-size: 16px;
+}
+.submit-btn{
+    line-height: 80px;
+}
