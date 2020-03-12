@@ -37,7 +37,14 @@
     "antd": "^3.26.7",
     "axios": "^0.19.2",
     "china-time": "^0.12.3",
+    "mariadb": "^2.2.0",
+    "mysql2": "^2.1.0",
+    "pg": "^7.18.2",
+    "pg-hstore": "^2.3.3",
     "react-router-dom": "^5.1.2",
+    "sequelize": "^5.21.5",
+    "sqlite3": "^4.1.1",
+    "tedious": "^8.0.1",
     "wangeditor": "^3.1.1"
   },
   "proxy": "http://127.0.0.1:7000"
