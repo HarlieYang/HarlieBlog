@@ -28,7 +28,6 @@ class Index extends Component {
                     titleList: JSON.parse(resp.data.result)
                 })
             }
-            
 		}, (err) => {
 			console.log(err);
         });

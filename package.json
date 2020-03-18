@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/node": "^13.9.1",
     "braft-editor": "^2.3.8",
     "express": "^4.17.1",
     "http-proxy-middleware": "^0.20.0",

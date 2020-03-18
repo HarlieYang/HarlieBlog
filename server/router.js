@@ -14,8 +14,8 @@ router.get("/getSort", (req, res, next) => {
         }
         res.send({result})
     });
-    
 })
+
 // 2. 根据类型、指定id查询文章
 router.get("/getArticle", (req, res, next) => {
     let result = []
@@ -34,15 +34,15 @@ router.post("/getArticle", (req, res, next) => {
     let result = []
     let articleparams = `select * from H_article where type = ${req.body.type} `
     console.log(articleparams)
-    query(articleparams,(err,vals,fields) => {
+    query(articleparams,(err, vals, fields) => {
         //do something
         if (vals) {
             result = JSON.stringify(vals)
         }
         res.send({result})
     });
-    
 }) 
+
 // 添加技术类别
 router.post("/addSort", (req, res, next) => {
     let sort_name
@@ -59,7 +59,6 @@ router.post("/addSort", (req, res, next) => {
                 res: 'ok'
             })
         }
-       
     });
 })
 
@@ -84,4 +83,5 @@ router.post("/addSortCon", (req, res, next) => {
        
     });
 })
+
 module.exports = router

@@ -13,7 +13,7 @@ const columns = [
       title: '创建时间',
       dataIndex: 'create_time',
     },
-  ];
+];
 
 class sortList extends Component {
     constructor(prop) {
@@ -27,7 +27,8 @@ class sortList extends Component {
                 {
                   sort_name: 'Jim Green',
                   address: 'London No. 1 Lake Park',
-                }]
+                }
+            ]
         }
     }
     componentWillMount () {
@@ -53,7 +54,7 @@ class sortList extends Component {
             console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
         },
         getCheckboxProps: record => ({
-            disabled: record.name === 'Disabled User', // Column configuration not to be checked
+            disabled: record.name === 'Disabled User', //Column configuration not to be checked
             name: record.name,
         }),
     };
