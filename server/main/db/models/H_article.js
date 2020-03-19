@@ -1,6 +1,6 @@
 const db = require('../db.js');
 
-module.exports = db.defineModel('H_sort', {
+module.exports = db.defineModel('H_article', {
     title: {
         type: db.STRING,
         allowNull: false
@@ -9,6 +9,6 @@ module.exports = db.defineModel('H_sort', {
         type: db.STRING,
     },
     sort_id: {
-        type: db.INTEGER,
+        type: db.STRING,
     }
 });

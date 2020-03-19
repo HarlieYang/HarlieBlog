@@ -1,10 +1,18 @@
 const Sequelize = require('sequelize');
+const config = require('./config');
+const uuid = require('node-uuid');
 
 console.log('init sequelize...');
 
-const sequelize = new Sequelize('blog', 'root', '!Wzh18916152877', {
-    host: 'localhost',
-    dialect: 'mysql',
+const generateId = () => {
+    return uuid.v4();
+}
+const ID_TYPE = Sequelize.STRING(50);
+const TYPES = ['STRING', 'INTEGER', 'BIGINT', 'TEXT', 'DOUBLE', 'DATEONLY', 'BOOLEAN'];
+
+let sequelize = new Sequelize(config.database, config.username, config.password, {
+    host: config.host,
+    dialect: config.dialect,
     pool: {
         max: 5,
         min: 0,
@@ -15,9 +23,7 @@ const sequelize = new Sequelize('blog', 'root', '!Wzh18916152877', {
     ladding: console.log(),
 });
 
-const ID_TYPE = Sequelize.STRING(50);
-
-function defineModel(name, attributes) {
+let defineModel = (name, attributes) => {
     var attrs = {};
     for (let key in attributes) {
         let value = attributes[key];
@@ -36,18 +42,18 @@ function defineModel(name, attributes) {
         primaryKey: true
     };
     attrs.create_time = {
-        type: Sequelize.DATE,
+        type: ID_TYPE,
         allowNull: false
     };
     attrs.update_time = {
-        type: Sequelize.DATE,
+        type: ID_TYPE,
         allowNull: false
     };
     return sequelize.define(name, attrs, {
         tableName: name,
         timestamps: false,
         hooks: {
-            beforeValidate: function (obj) {
+            beforeValidate: (obj) => {
                 let now = Date.now();
                 if (obj.isNewRecord) {
                     if (!obj.id) {
@@ -62,3 +68,19 @@ function defineModel(name, attributes) {
         }
     });
 }
+
+const exp = {
+    ID: ID_TYPE,
+    generateId: generateId,
+    defineModel: defineModel,
+    sync: () => {
+        sequelize.sync({ force: true });
+        
+    }
+};
+
+for (let type of TYPES) {
+    exp[type] = Sequelize[type];
+}
+
+module.exports = exp;
