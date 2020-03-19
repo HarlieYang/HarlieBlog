@@ -3,7 +3,12 @@ const H_sort  = require('../db/models/H_sort')
 
 const querySort = async (res) => {
     const query = await H_sort.findAll()
-    return query[0]['dataValues']
+    if (query.length>0) {
+        return query[0]['dataValues']
+    } else {
+        return []
+    }
+    
 };
 
 const addSort = async (sort_name, sort_title) => {
@@ -51,10 +56,10 @@ const deleteSort = async (id) => {
 //     console.log(res)
 // })
 // deleteSort('c677687e-b2cc-47c9-ae01-76ff6a4b4004')
-let articleBll = {
+let sortBll = {
     querySort,
     addSort,
     updateSort,
     deleteSort
 }
-module.exports = articleBll
+module.exports = sortBll

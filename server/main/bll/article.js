@@ -3,7 +3,11 @@ const H_article  = require('../db/models/H_article')
 
 const queryArticle = async (res) => {
     const query = await H_article.findAll()
-    return query[0]['dataValues']
+    if (query.length>0) {
+        return query[0]['dataValues']
+    } else {
+        return []
+    }
 };
 
 const addArticle = async (title, content, sort_id) => {
