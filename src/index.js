@@ -25,7 +25,7 @@ ReactDom.render(
   <Router>
     <section>
       {/* todo 判断前后台逻辑 */}
-      <Redirect path="/" exact={true} to="/index/js" />
+      {/* <Redirect path="/" exact={true} to="/index/js" /> */}
       <Route  path='/index' >
         <Header></Header>
         <Route  path='/index/js' component={JS}/>

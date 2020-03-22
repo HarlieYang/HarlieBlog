@@ -12,19 +12,18 @@ class Index extends Component {
         };
     }
     componentWillMount () {
-        console.log(this.props.match.params)
         this.getContent()
     }
     getContent = () => {
         axios({
-            method: 'post',
+            method: 'get',
             url: '/getArticle',
             data: {
-                type: 1
+                sort_id: 'b52d20f4-a3d6-4c61-8b12-b6cde2d63753'
             }
         }).then(resp => {
-            if(resp.data.result) {
-                let result = JSON.parse(resp.data.result)
+            if(resp.status === 200) {
+                let result = resp.data
                 this.setState({
                     articleCon: result[0]['content'],
                     title:  result[0]['title']

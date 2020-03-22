@@ -1,15 +1,21 @@
 import React,{Component,Fragment} from 'react'
-import { PageHeader, Input, Row, Col, Button} from 'antd';
+import { PageHeader, Input, Row, Col, Button, message} from 'antd';
 
 import axios from "axios";
 
 import './sortAdd.css';
-
+const success = function (con) {
+    message.success(con);
+};
+const error = function (con) {
+    message.error(con);
+};
 class sortAdd extends Component {
     constructor(prop) {
         super(prop)
         this.state = {
-            inputValue: null
+            inputValue: null,
+            sortTitleValue: null
         }
     }
     componentWillMount () {
@@ -20,23 +26,28 @@ class sortAdd extends Component {
 			method: 'post',
             url: "/addSort",
             data: {
-                sort_name: this.state.inputValue
+                sort_name: this.state.inputValue,
+                sort_title: this.state.sortTitleValue
             }
 		}).then((resp) => {
             console.log(resp);
-            if (resp.data.result){
-                this.setState({
-                    sortList: JSON.parse(resp.data.result)
-                })
+            if (resp.data.status){
+                success('添加成功')
             }
 		}, (err) => {
-			console.log(err);
+			error('添加失败')
 		});
     }
-    inputChange () {
-        const inputValue = this.refs.sortValue.state.value
+    inputChange (e) {
+        const inputValue = e.target.value
         this.setState({
             inputValue: inputValue
+        })
+    }
+    inputTitleChange (e) {
+        const sortTitleValue = e.target.value
+        this.setState({
+            sortTitleValue: sortTitleValue
         })
     }
     render() {
@@ -51,12 +62,21 @@ class sortAdd extends Component {
                     subTitle="添加分类"
                 /> 
                 <div className='sort-table'>
-                    <Row>
+                    <Row className='add-row'>
                         <Col span={3}>
                             <span className='label-sort-name'>类别名称：</span>
                         </Col>
                         <Col span={11}>
-                            <Input placeholder="Basic usage" ref='sortValue' onChange={() => this.inputChange()}/>
+                            <Input placeholder="类别名称" onChange={this.inputChange.bind(this)}/>
+                        </Col>
+                        <Col span={10}></Col>
+                    </Row>
+                    <Row className='add-row'>
+                        <Col span={3}>
+                            <span className='label-sort-name'>类别小标题：</span>
+                        </Col>
+                        <Col span={11}>
+                            <Input placeholder="类别小标题" onChange={this.inputTitleChange.bind(this)}/>
                         </Col>
                         <Col span={10}></Col>
                     </Row>
@@ -65,7 +85,7 @@ class sortAdd extends Component {
                         <Col span={4}>
                             <div className='submit-btn'>
                                 <Button type="primary" htmlType="submit" onClick={this.addSort.bind(this)}>
-                                    Submit
+                                    添加
                                 </Button>
                             </div>
                         </Col>

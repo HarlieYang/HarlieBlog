@@ -1,28 +1,48 @@
 import React,{Component,Fragment} from 'react'
-import { PageHeader, Input, Row, Col, Button, Select,} from 'antd';
+import { PageHeader, Input, Row, Col, Button, Select, message} from 'antd';
 
 import axios from "axios";
 import BraftEditor from 'braft-editor'
+import { ContentUtils } from 'braft-utils'
 // 引入编辑器样式
 import 'braft-editor/dist/index.css'
 import './sortConAdd.css';
 const {Option} = Select
 // 创建编辑器
 
+const controls = ['bold', 'italic', 'underline', 'separator', 'link', 'separator', 'media']
+
+const success = function (con) {
+    message.success(con);
+};
+const error = function (con) {
+    message.error(con);
+};
 
 class sortConAdd extends Component {
     constructor(prop) {
         super(prop)
         this.state = {
+            sortList: [],
             titleValue: null,
-            sortValue: null,
-            editorState: BraftEditor.createEditorState(null)
+            sortId: null,
+            editorState: BraftEditor.createEditorState(null),
+            extendControls: [
+                'separator',
+                {
+                  key: 'insert-media',
+                  type: 'button',
+                  text: '插入图片到编辑器',
+                  onClick: this.insertMediItem.bind(this)
+                }
+              ]
         }
     }
     componentWillUpdate (){
 
     }
     async componentDidMount () {
+        this.getSort()
         // 假设此处从服务端获取html格式的编辑器内容
         const htmlContent = 'Hello World!'
         // 使用BraftEditor.createEditorState将html字符串转换为编辑器需要的editorStat
@@ -30,7 +50,36 @@ class sortConAdd extends Component {
             editorState: BraftEditor.createEditorState(htmlContent)
         })
     }
-
+    getSort = () => {
+        axios({
+			method: 'get',
+			url: "/getSort"
+		}).then((resp) => {
+            console.log('harlie------sortlist',resp.data)
+            if (resp.status == 200){
+                this.setState({
+                    sortList: resp.data
+                })
+            }
+		}, (err) => {
+			console.log(err);
+		});
+    }
+    insertMediItem = () => {
+        // 使用ContentUtils.insertMedias来插入媒体到editorState
+        console.log(ContentUtils)
+        console.log(this.state.editorState)
+        const editorState = ContentUtils.insertMedias(this.state.editorState, [
+          {
+            type: 'IMAGE',
+            url: 'https://margox.cn/wp-content/uploads/2017/05/IMG_4995-480x267.jpg'
+          }
+        ])
+        console.log(editorState)
+        // 更新插入媒体后的editorState
+        this.setState({ editorState })
+    
+      }
     submitContent = async () => {
         // 在编辑器获得焦点时按下ctrl+s会执行此方法
         // 编辑器内容提交到服务端之前，可直接调用editorState.toHTML()来获取HTML格式的内容
@@ -42,27 +91,22 @@ class sortConAdd extends Component {
         this.setState({ editorState: editorState.toHTML()})
     }
     addSortCon () {
-        console.log(this.state.sortValue)
-        console.log(this.state.titleValue)
-        console.log(this.state.editorState)
-        if (!this.state.sortValue) return false
+        if (!this.state.sortId) return false
         axios({
 			method: 'post',
-            url: "/addSortCon",
+            url: "/addArticle",
             data: {
-                type: this.state.sortValue,
+                sort_id: this.state.sortId,
                 title: this.state.titleValue,
-                content: this.state.editorState
+                content: this.state.editorState.toHTML()
             }
 		}).then((resp) => {
             console.log(resp);
-            if (resp.data.result){
-                this.setState({
-                    sortList: JSON.parse(resp.data.result)
-                })
+            if (resp.data.status){
+                success('添加成功')
             }
 		}, (err) => {
-			console.log(err);
+			error('添加失败')
 		});
     }
     titleChange (e) {
@@ -71,9 +115,8 @@ class sortConAdd extends Component {
         })
     }
     onChange (value) {
-        console.log(value)
         this.setState({
-            sortValue: value
+            sortId: value
         })
     }
     render() {
@@ -103,10 +146,13 @@ class sortConAdd extends Component {
                                 option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                               }
                         >
-                            <Option value="1">深入JS</Option>
-                            <Option value="2">前沿框架</Option>
-                            <Option value="3">后端</Option>
-                            <Option value="4">其他</Option>
+                            {
+                                this.state.sortList.map(item => {
+                                    return(
+                                        <Option value={item.id}>{item.sort_name}</Option>
+                                    )
+                                })
+                            }
                         </Select>
                         </Col>
                         <Col span={10}></Col>
@@ -127,10 +173,18 @@ class sortConAdd extends Component {
                         <Col span={20}>
                             <div className="my-component">
                                 <BraftEditor
+                                    ref={instance => this.editorInstance = instance}
+                                    // controls={controls}
+                                    value={this.state.editorState}
+                                    onChange={this.handleChange}
+                                    // extendControls={this.state.extendControls}
+                                />
+                                {/* <BraftEditor
                                     value={this.state.editorState}
                                     onChange={(e) => this.handleEditorChange(e)}
                                     onSave={this.submitContent}
-                                />
+                                    extendControls={this.state.extendControls}
+                                /> */}
                             </div>
                         </Col>
                         <Col span={1}></Col>
@@ -140,7 +194,7 @@ class sortConAdd extends Component {
                         <Col span={4}>
                             <div className='submit-btn'>
                                 <Button type="primary" htmlType="submit" onClick={this.addSortCon.bind(this)}>
-                                    Submit
+                                    添加
                                 </Button>
                             </div>
                         </Col>

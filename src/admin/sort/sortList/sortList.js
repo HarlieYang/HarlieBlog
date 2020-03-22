@@ -1,47 +1,76 @@
 import React,{Component,Fragment} from 'react'
-import { PageHeader, Table} from 'antd';
+import { PageHeader, Table, Button, message} from 'antd';
 
 import axios from "axios";
 
 import './sortList.css'
-const columns = [
-    {
-      title: '技术名称',
-      dataIndex: 'sort_name',
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'create_time',
-    },
-];
 
+const success = function (con) {
+    message.success(con);
+};
+const error = function (con) {
+    message.error(con);
+};
 class sortList extends Component {
     constructor(prop) {
         super(prop)
         this.state = {
-            sortList: [
+            sortList: [],
+            columns: [
                 {
-                  sort_name: 'John Brown',
-                  address: 'New York No. 1 Lake Park',
+                  title: '技术名称',
+                  dataIndex: 'sort_name',
                 },
                 {
-                  sort_name: 'Jim Green',
-                  address: 'London No. 1 Lake Park',
+                    title: '技术标题',
+                    dataIndex: 'sort_title',
+                },
+                {
+                  title: '创建时间',
+                  dataIndex: 'create_time',
+                },
+                {
+                    title: '操作',
+                    dataIndex: 'id',
+                    render: (text, record) => (
+                        <span>
+                          <Button type="primary" onClick={this.onDelete.bind(this,record.id)}>删除</Button>
+                        </span>
+                      ),
                 }
             ]
         }
     }
     componentWillMount () {
+        console.log(11111)
         this.getSortList()
+    }
+    onDelete (value) {
+        axios({
+            method: 'post',
+            url: "/deleteSort",
+            data: {
+                id: value
+            }
+        }).then(resp => {
+            console.log('harlie------sortdelete',resp.data)
+            if(resp.data.status) {
+                success('删除成功')
+                this.getSortList()
+            } else {
+                error('删除失败')
+            }
+        })
     }
     getSortList () {
         axios({
 			method: 'get',
 			url: "/getSort"
 		}).then((resp) => {
-            if (resp.data.result){
+            console.log('harlie------sortlist',resp.data)
+            if (resp.status == 200){
                 this.setState({
-                    sortList: JSON.parse(resp.data.result)
+                    sortList: resp.data
                 })
             }
 		}, (err) => {
@@ -69,7 +98,7 @@ class sortList extends Component {
                 subTitle="查看、删除分类"
             /> 
             <div className='sort-table'>
-                <Table rowSelection={rowSelection} columns={columns} dataSource={this.state.sortList} rowKey='1'/>      
+                <Table rowSelection={rowSelection} columns={this.state.columns} dataSource={this.state.sortList} key='1'/>      
             </div>
         </Fragment>
     );

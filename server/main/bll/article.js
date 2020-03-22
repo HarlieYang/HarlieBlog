@@ -1,10 +1,16 @@
 const now = Date.now()
 const H_article  = require('../db/models/H_article')
 
-const queryArticle = async (res) => {
-    const query = await H_article.findAll()
+const queryArticle = async (params,sort_id = null) => {
+    let query
+    if (sort_id != null) {
+        query = await H_article.findAll({ where: { sort_id: sort_id} })
+    } else {
+        query = await H_article.findAll()
+    }
+    
     if (query.length>0) {
-        return query[0]['dataValues']
+        return query
     } else {
         return []
     }

@@ -17,15 +17,16 @@ class Index extends Component {
     }
     getList = () => {
         axios({
-			method: 'post',
+			method: 'get',
             url: "/getArticle",
             data: {
-                type: 1
+                sort_id: 'b52d20f4-a3d6-4c61-8b12-b6cde2d63753'
             }
 		}).then((resp) => {
-            if (resp.data.result){
+            console.log(resp)
+            if (resp.status === 200){
                 this.setState({
-                    titleList: JSON.parse(resp.data.result)
+                    titleList: resp.data
                 })
             }
 		}, (err) => {
@@ -33,7 +34,6 @@ class Index extends Component {
         });
     }
     render () { 
-        console.log(this.state.titleList)
         return (
             <Fragment>
                 <div className='section'>
@@ -46,7 +46,7 @@ class Index extends Component {
                                     {
                                         this.state.titleList.map((item,index)=>{
                                             return <li key={index}>
-                                                <Link to='/index/content/1'>{item.title}</Link>
+                                                <Link to={`/index/content/${item.id}`}>{item.title}</Link>
                                             </li>
                                         })
                                     }

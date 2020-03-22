@@ -14,7 +14,8 @@ router.get("/getSort", (req, res, next) => {
 
 // 2. 查询文章
 router.get("/getArticle", (req, res, next) => {
-    articleBll.queryArticle().then(result => {
+    let sort_id =  req.body.sort_id?req.body.sort_id:null
+    articleBll.queryArticle(sort_id).then(result => {
         res.send(result)
     })
 })

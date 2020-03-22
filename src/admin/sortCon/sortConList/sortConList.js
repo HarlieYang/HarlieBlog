@@ -1,30 +1,42 @@
 import React,{Component, Fragment} from 'react'
-import { PageHeader, Table } from 'antd'
+import { PageHeader, Table, message, Button} from 'antd'
 import  axios from 'axios'
-
-const columns = [
-    {
-      title: '所属技术类',
-      dataIndex: 'sort_name',
-    },
-    {
-      title: '文章标题',
-      dataIndex: 'title',
-    },
-    {
-        title: '添加时间',
-        dataIndex: 'create_time',
-    },
-    {
-        title: '设置'
-    }
-  ];
+const success = function (con) {
+    message.success(con);
+};
+const error = function (con) {
+    message.error(con);
+}
 
 class sortConList extends Component {
     constructor (props) {
         super(props)
         this.state = {
-            sortList: []
+            articleList: [],
+            sortList: [],
+            columns: [
+                {
+                  title: '所属技术类',
+                  dataIndex: 'sort_name'
+                },
+                {
+                  title: '文章标题',
+                  dataIndex: 'title',
+                },
+                {
+                    title: '添加时间',
+                    dataIndex: 'create_time',
+                },
+                {
+                    title: '操作',
+                    dataIndex: 'id',
+                    render: (text, record) => (
+                        <span>
+                          <Button type="primary" onClick={this.onDelete.bind(this,record.id)}>删除</Button>
+                        </span>
+                      ),
+                },
+              ]
         }
     }
     componentWillMount () {
@@ -33,17 +45,55 @@ class sortConList extends Component {
     getSortList () {
         axios({
 			method: 'get',
+			url: "/getSort"
+		}).then((resp) => {
+            if (resp.status == 200){
+                this.setState({
+                    sortList: resp.data
+                })
+                this.articleList()
+            }
+		}, (err) => {
+			console.log(err);
+		});
+    }
+    articleList () {
+        axios({
+			method: 'get',
 			url: "/getArticle"
 		}).then((resp) => {
-            if (resp.data.result){
-                console.log(resp.data.result)
+            if (resp.status === 200){
+                const data = resp.data
+                data.forEach(element => {
+                    const article = this.state.sortList.filter(item => {
+                       return element.sort_id == item.id
+                    })
+                    element['sort_name'] = article[0]['sort_name']
+                });
                 this.setState({
-                    sortList: JSON.parse(resp.data.result)
+                    articleList: resp.data
                 })
             }
 		}, (err) => {
 			console.log(err);
         });
+    }
+    onDelete = (value) => {
+        axios({
+            method: 'post',
+            url: "/deleteArticle",
+            data: {
+                id: value
+            }
+        }).then(resp => {
+            console.log('harlie------sortdelete',resp.data)
+            if(resp.data.status) {
+                success('删除成功')
+                this.articleList()
+            } else {
+                error('删除失败')
+            }
+        })
     }
     render () {
         const rowSelection = {
@@ -54,7 +104,7 @@ class sortConList extends Component {
                 disabled: record.name === 'Disabled User', // Column configuration not to be checked
                 name: record.name,
             }),
-        };
+        }
         return (
             <Fragment>
                 <PageHeader
@@ -66,11 +116,10 @@ class sortConList extends Component {
                 subTitle="查看、删除文章"
             /> 
             <div className='sort-table'>
-                <Table rowSelection={rowSelection} columns={columns} dataSource={this.state.sortList} rowKey='1'/>      
+                <Table rowSelection={rowSelection} columns={this.state.columns} dataSource={this.state.articleList} rowKey='1'/>      
             </div>
             </Fragment>
         )
     }
 }
-
-export default sortConList;
+export default sortConList

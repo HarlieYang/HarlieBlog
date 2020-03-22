@@ -2,9 +2,11 @@ const now = Date.now()
 const H_sort  = require('../db/models/H_sort')
 
 const querySort = async (res) => {
+    console.log('harlie-----------------')
     const query = await H_sort.findAll()
+    console.log(query)
     if (query.length>0) {
-        return query[0]['dataValues']
+        return query
     } else {
         return []
     }
