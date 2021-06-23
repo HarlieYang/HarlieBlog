@@ -68,7 +68,7 @@ class sortList extends Component {
 			url: "/getSort"
 		}).then((resp) => {
             console.log('harlie------sortlist',resp.data)
-            if (resp.status == 200){
+            if (resp.status === 200){
                 this.setState({
                     sortList: resp.data
                 })

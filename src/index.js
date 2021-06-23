@@ -5,10 +5,8 @@ import {BrowserRouter as Router,Route, Redirect} from "react-router-dom"
 import './index.css';
 
 // 前台路由
-import JS from './javascript/javascript';
-import Frame from './frame/frame';
+import Article from './view/articlelist/articlelist';
 import Header from './component/header/header';
-import Content from './component/content/content';
 
 // 后台路由
 import Admin from './admin/index/index'
@@ -25,13 +23,13 @@ ReactDom.render(
   <Router>
     <section>
       {/* todo 判断前后台逻辑 */}
-      {/* <Redirect path="/" exact={true} to="/index/js" /> */}
-      <Route  path='/index' >
+      <Redirect path="/" exact={true} to="/front/articlelist" />
+      <Route  path='/front' >
         <Header></Header>
-        <Route  path='/index/js' component={JS}/>
-        <Route path='/index/content/:type' component={Content}/>
+        <div className="content">
+          <Route  path='/front/articlelist' component={Article}/>
+        </div>
       </Route>
-      <Route path='/frame' component={Frame}/>
       <Route path = '/admin' render={({history,location,match}) => (
           <Admin history={history} location={location} match={location}>
             <Route path='/admin/sortList' component={sortList}/>

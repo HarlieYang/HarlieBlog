@@ -47,7 +47,7 @@ class sortConList extends Component {
 			method: 'get',
 			url: "/getSort"
 		}).then((resp) => {
-            if (resp.status == 200){
+            if (resp.status === 200){
                 this.setState({
                     sortList: resp.data
                 })
@@ -66,7 +66,7 @@ class sortConList extends Component {
                 const data = resp.data
                 data.forEach(element => {
                     const article = this.state.sortList.filter(item => {
-                       return element.sort_id == item.id
+                       return element.sort_id === item.id
                     })
                     element['sort_name'] = article[0]['sort_name']
                 });

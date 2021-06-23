@@ -12,3 +12,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+.content{
+  width: 65%;
+  height: 100vh;
+  overflow-y: scroll;
+  padding: 45px 35px;
+}

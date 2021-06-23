@@ -10,7 +10,7 @@ import './sortConAdd.css';
 const {Option} = Select
 // 创建编辑器
 
-const controls = ['bold', 'italic', 'underline', 'separator', 'link', 'separator', 'media']
+// const controls = ['bold', 'italic', 'underline', 'separator', 'link', 'separator', 'media']
 
 const success = function (con) {
     message.success(con);
@@ -56,7 +56,7 @@ class sortConAdd extends Component {
 			url: "/getSort"
 		}).then((resp) => {
             console.log('harlie------sortlist',resp.data)
-            if (resp.status == 200){
+            if (resp.status === 200){
                 this.setState({
                     sortList: resp.data
                 })
@@ -83,7 +83,7 @@ class sortConAdd extends Component {
     submitContent = async () => {
         // 在编辑器获得焦点时按下ctrl+s会执行此方法
         // 编辑器内容提交到服务端之前，可直接调用editorState.toHTML()来获取HTML格式的内容
-        const htmlContent = this.state.editorState.toHTML()
+        // const htmlContent = this.state.editorState.toHTML()
         // const result = await saveEditorContent(htmlContent)
     }
 
