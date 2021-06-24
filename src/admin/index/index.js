@@ -52,10 +52,10 @@ class Admin extends Component {
                     }
                         >
                         <Menu.Item key="3">
-                            <Link to='/admin/sortConList'>技术列表</Link>
+                            <Link to='/admin/articlelist'>技术列表</Link>
                         </Menu.Item>
                         <Menu.Item key="4">
-                            <Link to='/admin/sortConAdd'>技术添加</Link>
+                            <Link to='/admin/articleadd'>技术添加</Link>
                         </Menu.Item>
                     </SubMenu>
                 </Menu>

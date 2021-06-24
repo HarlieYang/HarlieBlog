@@ -1,10 +1,8 @@
 const now = Date.now()
 const H_sort  = require('../db/models/H_sort')
 
-const querySort = async (res) => {
-    console.log('harlie-----------------')
+const querySort = async () => {
     const query = await H_sort.findAll()
-    console.log(query)
     if (query.length>0) {
         return query
     } else {
@@ -13,28 +11,23 @@ const querySort = async (res) => {
     
 };
 
-const addSort = async (sort_name, sort_title) => {
-    let data = await H_sort.create({
-        sort_name: sort_name,
-        sort_title: sort_title,
+const addSort = async ( sortName, sortTitle ) => {
+    const data = await H_sort.create({
+        sortName,
+        sortTitle,
         createdAt: now,
         updatedAt: now
     });
-    let status = false
-    if (data.id) {
-        status = true
-    }
+    
+    const status = data.id ? true : false
     return {status}
 }
 
-const updateSort = async (params,id) => {
+const updateSort = async ( params, id ) => {
     let res = await H_sort.update(params,{
         'where': { 'id': id }
     });
-    let status = false
-    if (res.length > 0) {
-        status = true
-    }
+    const status = res.length ? true : false
     return {status}
 }
 
@@ -42,11 +35,7 @@ const deleteSort = async (id) => {
     let res = await H_sort.destroy({
         'where': { 'id': id }
     });
-    console.log(res)
-    let status = false
-    if (res) {
-        status = true
-    }
+    const status = res.length ? true : false
     return {status}
 }
 // querySort().then(res => {

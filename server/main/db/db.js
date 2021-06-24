@@ -1,16 +1,24 @@
+/*
+ * @Author: HarlieYang
+ * @Date: 2021-06-23 10:01:03
+ * @LastEditTime: 2021-06-24 10:41:44
+ * @LastEditors: Please set LastEditors
+ * @Description: sequelize 统一Model的定义
+ * @FilePath: /HarlieBlog/server/main/db/db.js
+ */
+
 const Sequelize = require('sequelize');
 const config = require('./config');
 const uuid = require('node-uuid');
 
 console.log('init sequelize...');
 
-const generateId = () => {
-    return uuid.v4();
-}
-const ID_TYPE = Sequelize.STRING(50);
-const TYPES = ['STRING', 'INTEGER', 'BIGINT', 'TEXT', 'DOUBLE', 'DATEONLY', 'BOOLEAN'];
-
-let sequelize = new Sequelize(config.database, config.username, config.password, {
+/**
+ * @description: 1. 创建一个sequelize对象实例
+ * @param {*}
+ * @return {*}
+ */
+const sequelize = new Sequelize(config.database, config.username, config.password, {
     host: config.host,
     dialect: config.dialect,
     pool: {
@@ -23,7 +31,22 @@ let sequelize = new Sequelize(config.database, config.username, config.password,
     ladding: console.log(),
 });
 
-let defineModel = (name, attributes) => {
+
+/**
+ * @description: 2. 定义模型 映射数据库表
+ * @param {*} name
+ * @param {*} attributes
+ * @return {*}
+ */
+
+const generateId = () => {
+    return uuid.v4();
+}
+
+const ID_TYPE = Sequelize.STRING(50);
+const TYPES = ['STRING', 'INTEGER', 'BIGINT', 'TEXT', 'DOUBLE', 'DATEONLY', 'BOOLEAN'];
+
+const defineModel = (name, attributes) => {
     var attrs = {};
     for (let key in attributes) {
         let value = attributes[key];
@@ -41,14 +64,15 @@ let defineModel = (name, attributes) => {
         type: ID_TYPE,
         primaryKey: true
     };
-    attrs.create_time = {
-        type: ID_TYPE,
+    attrs.createdAt = {
+        type: Sequelize.BIGINT,
         allowNull: false
     };
-    attrs.update_time = {
-        type: ID_TYPE,
+    attrs.updatedAt = {
+        type: Sequelize.BIGINT,
         allowNull: false
     };
+    
     return sequelize.define(name, attrs, {
         tableName: name,
         timestamps: false,
@@ -59,8 +83,8 @@ let defineModel = (name, attributes) => {
                     if (!obj.id) {
                         obj.id = generateId();
                     }
-                    obj.create_time = now;
-                    obj.update_time = now;
+                    obj.createdAt = now;
+                    obj.updatedAt = now;
                 } else {
                     obj.updatedAt = Date.now();
                 }
@@ -73,9 +97,9 @@ const exp = {
     ID: ID_TYPE,
     generateId: generateId,
     defineModel: defineModel,
+    // sync() 自动创建数据库
     sync: () => {
         sequelize.sync({ force: true });
-        
     }
 };
 

@@ -7,40 +7,37 @@ var router = express.Router()
 // 1. 查询技术类别
 router.get("/getSort", (req, res, next) => {
     sortBll.querySort().then(result => {
-        console.log(result)
         res.send(result)
     })
 })
 
 // 2. 查询文章
 router.get("/getArticle", (req, res, next) => {
-    let sort_id =  req.body.sort_id?req.body.sort_id:null
-    articleBll.queryArticle(sort_id).then(result => {
+    let sortId =  req.body.sortId ? req.body.sortId : null
+    articleBll.queryArticle(sortId).then(result => {
         res.send(result)
     })
 })
 
+
 // 3. 添加技术类别
 router.post("/addSort", (req, res, next) => {
-    let sort_name,sort_title
+    let sortName,sortTitle
     if (req.body) {
-        sort_name = req.body.sort_name
-        sort_title = req.body.sort_title
+        [ sortName,sortTitle ] = req.body
     }
-    sortBll.addSort(sort_name, sort_title).then(result => {
+    sortBll.addSort(sortName, sortTitle).then(result => {
         res.send(result)
     })
 })
 
 // 4.添加文章
 router.post("/addArticle", (req, res, next) => {
-    let sort_id,title,content
+    let sortId, title, content, url
     if (req.body) {
-        sort_id = req.body.sort_id
-        title = req.body.title
-        content = req.body.content
+        [ sortId, title, content, url] = req.body
     }
-    articleBll.addArticle(title, content, sort_id).then(result => {
+    articleBll.addArticle(title, content, url, sortId).then(result => {
         res.send(result)
     })
 })
@@ -66,4 +63,5 @@ router.post("/deleteArticle", (req, res, next) => {
         res.send(result)
     })
 })
+
 module.exports = router

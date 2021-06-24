@@ -4,6 +4,7 @@ import { PageHeader, Input, Row, Col, Button, message} from 'antd';
 import axios from "axios";
 
 import './sortAdd.css';
+
 const success = function (con) {
     message.success(con);
 };
@@ -26,8 +27,8 @@ class sortAdd extends Component {
 			method: 'post',
             url: "/addSort",
             data: {
-                sort_name: this.state.inputValue,
-                sort_title: this.state.sortTitleValue
+                sortName: this.state.inputValue,
+                sortTitle: this.state.sortTitleValue
             }
 		}).then((resp) => {
             console.log(resp);

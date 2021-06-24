@@ -1,44 +1,36 @@
 const now = Date.now()
 const H_article  = require('../db/models/H_article')
 
-const queryArticle = async (params,sort_id = null) => {
-    let query
-    if (sort_id != null) {
-        query = await H_article.findAll({ where: { sort_id: sort_id} })
-    } else {
-        query = await H_article.findAll()
-    }
-    
-    if (query.length>0) {
+const queryArticle = async ( params, sort_id = null ) => {
+    const query = sort_id ? await H_article.findAll({ where: { sort_id: sort_id} }) : await H_article.findAll()
+    if (query.length > 0) {
         return query
     } else {
         return []
     }
 };
 
-const addArticle = async (title, content, sort_id) => {
-    let data = await H_article.create({
-        title: title,
-        content: content,
-        sort_id: sort_id,
+const addArticle = async ( title, content, url, sortId ) => {
+    // 获取到内容后，将内容放在html文件上传到oss中
+    
+    const data = await H_article.create({
+        title,
+        content,
+        url,
+        sortId,
         createdAt: now,
         updatedAt: now
     });
-    let status = false
-    if (data.id) {
-        status = true
-    }
+    // 
+    const status = data.id ? true: false
     return {status}
 }
 
-const updateArticle = async (params,id) => {
-    let res = await H_article.update(params,{
+const updateArticle = async ( params, id ) => {
+    let res = await H_article.update( params, {
         'where': { 'id': id }
     });
-    let status = false
-    if (res.length > 0) {
-        status = true
-    }
+    const status = res.length ? true: false
     return {status}
 }
 
@@ -46,11 +38,7 @@ const deleteArticle = async (id) => {
     let res = await H_article.destroy({
         'where': { 'id': id }
     });
-    console.log(res)
-    let status = false
-    if (res) {
-        status = true
-    }
+    const status = res ? true: false
     return {status}
 }
 // addArticle('标题','内容','a6df4dc8-e845-4fc4-8430-80960ac5d563')

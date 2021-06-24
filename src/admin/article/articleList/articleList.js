@@ -17,7 +17,7 @@ class sortConList extends Component {
             columns: [
                 {
                   title: '所属技术类',
-                  dataIndex: 'sort_name'
+                  dataIndex: 'sortName'
                 },
                 {
                   title: '文章标题',
@@ -25,7 +25,7 @@ class sortConList extends Component {
                 },
                 {
                     title: '添加时间',
-                    dataIndex: 'create_time',
+                    dataIndex: 'createAt',
                 },
                 {
                     title: '操作',
@@ -74,9 +74,7 @@ class sortConList extends Component {
                     articleList: resp.data
                 })
             }
-		}, (err) => {
-			console.log(err);
-        });
+		});
     }
     onDelete = (value) => {
         axios({
@@ -86,7 +84,6 @@ class sortConList extends Component {
                 id: value
             }
         }).then(resp => {
-            console.log('harlie------sortdelete',resp.data)
             if(resp.data.status) {
                 success('删除成功')
                 this.articleList()

@@ -19,15 +19,15 @@ class sortList extends Component {
             columns: [
                 {
                   title: '技术名称',
-                  dataIndex: 'sort_name',
+                  dataIndex: 'sortName',
                 },
                 {
                     title: '技术标题',
-                    dataIndex: 'sort_title',
+                    dataIndex: 'sortTitle',
                 },
                 {
                   title: '创建时间',
-                  dataIndex: 'create_time',
+                  dataIndex: 'createAt',
                 },
                 {
                     title: '操作',
@@ -42,7 +42,6 @@ class sortList extends Component {
         }
     }
     componentWillMount () {
-        console.log(11111)
         this.getSortList()
     }
     onDelete (value) {
@@ -53,7 +52,6 @@ class sortList extends Component {
                 id: value
             }
         }).then(resp => {
-            console.log('harlie------sortdelete',resp.data)
             if(resp.data.status) {
                 success('删除成功')
                 this.getSortList()
@@ -67,14 +65,11 @@ class sortList extends Component {
 			method: 'get',
 			url: "/getSort"
 		}).then((resp) => {
-            console.log('harlie------sortlist',resp.data)
             if (resp.status === 200){
                 this.setState({
                     sortList: resp.data
                 })
             }
-		}, (err) => {
-			console.log(err);
 		});
     }
     render() {

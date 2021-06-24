@@ -12,8 +12,8 @@ import Header from './component/header/header';
 import Admin from './admin/index/index'
 import sortList from './admin/sort/sortList/sortList'
 import sortAdd from './admin/sort/sortAdd/sortAdd'
-import sortConList from './admin/sortCon/sortConList/sortConList'
-import sortConAdd from './admin/sortCon/sortConAdd/sortConAdd.js'
+import articleList from './admin/article/articleList/articleList'
+import articleAdd from './admin/article/articleAdd/articleAdd'
 
 
 // 跨域访问
@@ -23,8 +23,8 @@ ReactDom.render(
   <Router>
     <section>
       {/* todo 判断前后台逻辑 */}
-      <Redirect path="/" exact={true} to="/front/articlelist" />
       <Route  path='/front' >
+        <Redirect path="/front" exact={true} to="/front/articlelist" />
         <Header></Header>
         <div className="content">
           <Route  path='/front/articlelist' component={Article}/>
@@ -34,8 +34,8 @@ ReactDom.render(
           <Admin history={history} location={location} match={location}>
             <Route path='/admin/sortList' component={sortList}/>
             <Route path='/admin/sortAdd' component={sortAdd}/>
-            <Route path='/admin/sortConList' component={sortConList}/>
-            <Route path='/admin/sortConAdd' component={sortConAdd}/>
+            <Route path='/admin/articlelist' component={articleList}/>
+            <Route path='/admin/articleadd' component={articleAdd}/>
           </Admin>
       )} />
     </section>
