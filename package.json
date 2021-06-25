@@ -14,7 +14,7 @@
     "react-scripts": "3.2.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start --max_old_space_size=5046",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -40,6 +40,7 @@
     "babel-core": "^6.26.3",
     "braft-utils": "^3.0.12",
     "china-time": "^0.12.3",
+    "cos-js-sdk-v5": "^1.2.14",
     "draft-convert": "^2.1.8",
     "mariadb": "^2.2.0",
     "mysql2": "^2.1.0",

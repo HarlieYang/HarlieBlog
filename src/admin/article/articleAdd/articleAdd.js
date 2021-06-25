@@ -1,17 +1,17 @@
 import React,{Component,Fragment} from 'react'
-import { PageHeader, Input, Row, Col, Button, Select, message} from 'antd';
+import { PageHeader, Input, Row, Col, Button, Select, message, Upload, Icon} from 'antd';
+
+import TencentOSS from '../../../api/uploadOss'
 
 import axios from "axios";
 import BraftEditor from 'braft-editor'
 import { ContentUtils } from 'braft-utils'
+
 // 引入编辑器样式
-import 'ContentUtils';
 import 'braft-editor/dist/index.css'
 import './articleAdd.css';
-const {Option} = Select
-// 创建编辑器
 
-// const controls = ['bold', 'italic', 'underline', 'separator', 'link', 'separator', 'media']
+const {Option} = Select
 
 const success = function (con) {
     message.success(con);
@@ -23,40 +23,51 @@ const error = function (con) {
 class sortConAdd extends Component {
     constructor(prop) {
         super(prop)
+        /**
+         * @description: 
+         * @param {*}  sortList       类目列表
+         * @param {*}  titleValue     文章title
+         * @param {*}  sortId         所选类目
+         * @param {*}  editorState     编辑器内容
+         * @param {*}  extendControls  编辑器属性
+         * @return {*}
+         */    
+
         this.state = {
             sortList: [],
             titleValue: null,
             sortId: null,
-            editorState: BraftEditor.createEditorState(null),
+            editorState: BraftEditor.createEditorState('Hello World!'),
             extendControls: [
-                'separator',
                 {
-                  key: 'insert-media',
-                  type: 'button',
-                  text: '插入图片到编辑器---',
-                  onClick: this.insertMediItem.bind(this)
+                  key: 'antd-uploader',
+                  type: 'component',
+                  component: (
+                    <Upload
+                      accept="image/*"
+                      showUploadList={false}
+                      customRequest={this.insertMediItem}
+                    >
+                      <button type="button" className="control-item button upload-button" data-title="插入图片">
+                        <Icon type="picture" theme="filled" />
+                      </button>
+                    </Upload>
+                  )
                 }
-              ]
+            ]
         }
     }
-    componentWillUpdate (){
 
-    }
-    async componentDidMount () {
+    componentDidMount () {
         this.getSort()
-        // 假设此处从服务端获取html格式的编辑器内容
-        const htmlContent = 'Hello World!'
-        // 使用BraftEditor.createEditorState将html字符串转换为编辑器需要的editorStat
-        this.setState({
-            editorState: BraftEditor.createEditorState(htmlContent)
-        })
     }
+
+    // 获取类目列表
     getSort = () => {
         axios({
 			method: 'get',
 			url: "/getSort"
 		}).then((resp) => {
-            console.log('harlie------sortlist',resp.data)
             if (resp.status === 200){
                 this.setState({
                     sortList: resp.data
@@ -66,36 +77,41 @@ class sortConAdd extends Component {
 			console.log(err);
 		});
     }
-    insertMediItem = () => {
-        // 使用ContentUtils.insertMedias来插入媒体到editorState
-        console.log('editorState',this.state.editorState)
-        let editorState = this.state.editorState
-        editorState = ContentUtils.insertMedias(editorState, [
-          {
-            type: 'IMAGE',
-            url: 'https://pic4.zhimg.com/v2-4e43f6130697f7922d02ffe3192ee148_1440w.jpg?source=172ae18b'
-          }
-        ])
-        // console.log(editorState)
-        // 更新插入媒体后的editorState
-        // this.setState({ editorState })
-    
-    }
-    submitContent = async () => {
-        // 在编辑器获得焦点时按下ctrl+s会执行此方法
-        // 编辑器内容提交到服务端之前，可直接调用editorState.toHTML()来获取HTML格式的内容
-        // const htmlContent = this.state.editorState.toHTML()
-        // console.log('htmlContent',htmlContent)
-        // const result = await saveEditorContent(htmlContent)
+
+    // 编辑器上传图片功能
+    insertMediItem = (value) => {
+        message.loading('上传中..').then( async () => {
+            const fileTencentOSS = new TencentOSS()
+            fileTencentOSS.getCos()
+            const url = await fileTencentOSS.upload_file_locality(value.file)
+            if(url){
+                message.success('上传成功')
+                console.log('url',url)
+                const editorState = ContentUtils.insertMedias( this.state.editorState, [
+                    {
+                        type: 'IMAGE',
+                        url
+                    }
+                ])
+                this.setState({
+                    editorState
+                })
+            }
+        })
     }
 
-    handleEditorChange = (editorState) => {
-        console.log(' editorState.toHTML()', editorState.toHTML())
-        this.setState({ editorState: editorState.toHTML()})
+    // 在编辑器获得焦点时按下ctrl+s会执行此方法
+    submitContent = async () => {
+        
     }
-    addSortCon () {
+    // 编辑器change事件
+    handleEditorChange = (editorState) => {
+        this.setState({ editorState: editorState})
+    }
+
+    // 添加文章
+    addArticle () {
         if (!this.state.sortId) return false
-        console.log('this.state.editorState.toHTML()',this.state.editorState.toHTML())
         axios({
 			method: 'post',
             url: "/addArticle",
@@ -105,7 +121,6 @@ class sortConAdd extends Component {
                 content: this.state.editorState.toHTML()
             }
 		}).then((resp) => {
-            console.log(resp);
             if (resp.data.status){
                 success('添加成功')
             }
@@ -113,11 +128,7 @@ class sortConAdd extends Component {
 			error('添加失败')
 		});
     }
-    titleChange (e) {
-        this.setState({
-            titleValue: e.target.value
-        })
-    }
+    // 获取类目
     onChange (value) {
         this.setState({
             sortId: value
@@ -166,9 +177,8 @@ class sortConAdd extends Component {
                             <span className='label-sort-name'>文章标题：</span>
                         </Col>
                         <Col span={11}>
-                            <Input placeholder="输入标题" onChange={this.titleChange.bind(this)} defaultValue={this.state.titleValue}/>
+                            <Input placeholder="输入标题" ref = {(value) => { this.titleValue = value}}/>
                         </Col>
-                        <Col span={10}></Col>
                     </Row>
                     <Row style={{marginTop: 20}}>
                         <Col span={3}>
@@ -183,7 +193,6 @@ class sortConAdd extends Component {
                                 />
                             </div>
                         </Col>
-                        <Col span={1}></Col>
                     </Row>
                     <Row>
                         <Col span={12}></Col>
@@ -193,9 +202,6 @@ class sortConAdd extends Component {
                                     添加
                                 </Button>
                             </div>
-                        </Col>
-                        <Col span={8}>
-                       
                         </Col>
                     </Row>
                     

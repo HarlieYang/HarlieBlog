@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-06-23 10:52:04
- * @LastEditTime: 2021-06-23 11:49:50
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-06-24 14:11:40
+ * @LastEditors: your name
  * @Description: In User Settings Edit
  * @FilePath: /HarlieBlog/src/view/articlelist/articlelist.js
  */
@@ -66,7 +66,7 @@ class Article extends Component {
                                             <Link>展开</Link>
                                         </div>               
                                     </article>
-                                )
+                                )   
                             })
                         }
                     </Row>
