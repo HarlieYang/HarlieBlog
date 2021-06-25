@@ -87,7 +87,7 @@
   },
   "devDependencies": {
     "antd": "^3.26.7",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "babel-core": "^6.26.3",
     "braft-utils": "^3.0.12",
     "china-time": "^0.12.3",
