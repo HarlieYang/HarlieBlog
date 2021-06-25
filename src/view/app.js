@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-25 13:39:50
- * @LastEditTime: 2021-06-25 15:11:18
+ * @LastEditTime: 2021-06-25 16:23:03
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /HarlieBlog/src/view/app.js
@@ -14,6 +14,7 @@ import { routerConfig } from "@/router/config";
 import Header from '@/component/header/header';
 import Admin from '@/view/admin/index/index'
 
+const frontRoute = ['/front/articlelist','/front/articledetail']
 // 公共头部组件
 class App extends Component {
   constructor(props){
@@ -34,10 +35,10 @@ class App extends Component {
         <div className="blog">
           {/* switch 加上后路由不显示 */}
           {
-            this.props.curPageInfo.path === "/front/articlelist" ? (<Header></Header>) : (<Admin></Admin>)
+            frontRoute.includes(this.props.curPageInfo.path) ? (<Header></Header>) : (<Admin></Admin>)
           }
           
-          <div className={this.props.curPageInfo.path === "/front/articlelist" ? 'container font': 'container' }>
+          <div className={ frontRoute.includes(this.props.curPageInfo.path) ? 'container font': 'container' }>
             {routerConfig.map((item, index) => {
               return (
                   <Fragment key={index}>

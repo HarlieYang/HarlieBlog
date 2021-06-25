@@ -1,7 +1,7 @@
 /*
  * @Author: HarlieYang
  * @Date: 2021-06-23 10:01:03
- * @LastEditTime: 2021-06-25 13:31:12
+ * @LastEditTime: 2021-06-25 16:37:13
  * @LastEditors: Please set LastEditors
  * @Description: 后台接口封装
  * @FilePath: /HarlieBlog/server/main/router/router.js
@@ -21,8 +21,7 @@ router.get("/getSort", (req, res, next) => {
 
 // 2. 查询文章
 router.get("/getArticle", (req, res, next) => {
-    let sortId =  req.body.sortId ? req.body.sortId : null
-    articleBll.queryArticle(sortId).then(result => {
+    articleBll.queryArticle(req.query).then(result => {
         res.send(result)
     })
 })

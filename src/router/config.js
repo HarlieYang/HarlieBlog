@@ -1,5 +1,6 @@
 // 前台路由
 import Article from '@/view/front/articlelist/articlelist';
+import ArticleDetail from '@/view/front/articledetail/articledetail';
 
 // 后台路由
 import sortList from '@/view/admin/sort/sortList/sortList'
@@ -12,6 +13,15 @@ export const routerConfig = [
         path: '/front/articlelist',
         component: Article,
         title: '文章列表',
+        name: 'index',
+        auth: true,
+        index: ['1'],
+        subIndex: ['']
+    },
+    {
+        path: '/front/articledetail',
+        component: ArticleDetail,
+        title: '文章详情',
         name: 'index',
         auth: true,
         index: ['1'],

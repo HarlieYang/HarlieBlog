@@ -1,8 +1,10 @@
 const H_article  = require('../db/models/H_article')
 const utils = require('../utils')
 
-const queryArticle = async ( params, sort_id = null ) => {
-    const query = sort_id ? await H_article.findAll({ where: { sort_id: sort_id} }) : await H_article.findAll()
+const queryArticle = async ( params,id ) => {
+    const query = params.id ? 
+    await H_article.findAll({  'order': [ ['createdAt', 'DESC'] ], where: { id: params.id} }) : 
+    await H_article.findAll( {'order': [ ['createdAt', 'DESC'] ] })
     if (query.length>0) {
         return {status: 200 , data: query}
     } else {

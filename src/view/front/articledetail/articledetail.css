@@ -1,0 +1,15 @@
+.headline{
+    font-size: 30px;
+    font-weight: 700;
+    word-break: break-word;
+    margin-bottom: 10px;
+}
+.back{
+    text-align: right;
+    cursor: pointer;
+}
+.time{
+    font-size: 12px;
+    display: flex;
+    color: #969696;
+}
