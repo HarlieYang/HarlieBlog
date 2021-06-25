@@ -12,7 +12,7 @@ var config = {
     database: 'blog',
     username: 'root',
     port: 3306,
-    password: '!Wzh18916152877',
+    password: '数据库密码',
     host: 'rm-8vbh6cf3mfulpa660qo.mysql.zhangbei.rds.aliyuncs.com'
 };
 
