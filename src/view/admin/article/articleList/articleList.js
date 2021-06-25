@@ -1,12 +1,7 @@
 import React,{Component, Fragment} from 'react'
 import { PageHeader, Table, message, Button} from 'antd'
-import  axios from 'axios'
-const success = function (con) {
-    message.success(con);
-};
-const error = function (con) {
-    message.error(con);
-}
+
+import { requestPost } from "@/api/request";
 
 class sortConList extends Component {
     constructor (props) {
@@ -43,65 +38,43 @@ class sortConList extends Component {
         this.getSortList()
     }
     getSortList () {
-        axios({
-			method: 'get',
-			url: "/getSort"
-		}).then((resp) => {
-            if (resp.status === 200){
+        requestPost('getSort','','get').then(resp => {
+            if( resp.status === 200 ){
                 this.setState({
                     sortList: resp.data
                 })
                 this.articleList()
             }
-		}, (err) => {
-			console.log(err);
-		});
+        })
     }
     articleList () {
-        axios({
-			method: 'get',
-			url: "/getArticle"
-		}).then((resp) => {
+        requestPost('getArticle','','get').then(resp => {
             if (resp.status === 200){
                 const data = resp.data
                 data.forEach(element => {
                     const article = this.state.sortList.filter(item => {
-                       return element.sort_id === item.id
+                       return element.sortId === item.id
                     })
-                    element['sort_name'] = article[0]['sort_name']
+                    element['sortName'] = article[0]['sortName']
                 });
                 this.setState({
                     articleList: resp.data
                 })
             }
-		});
+        })
     }
+
     onDelete = (value) => {
-        axios({
-            method: 'post',
-            url: "/deleteArticle",
-            data: {
-                id: value
-            }
-        }).then(resp => {
-            if(resp.data.status) {
-                success('删除成功')
+        requestPost('deleteArticle',{id : value}).then(resp => {
+            if(resp.status) {
+                message.success('删除成功')
                 this.articleList()
             } else {
-                error('删除失败')
+                message.error('删除失败')
             }
         })
     }
     render () {
-        const rowSelection = {
-            onChange: (selectedRowKeys, selectedRows) => {
-                console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-            },
-            getCheckboxProps: record => ({
-                disabled: record.name === 'Disabled User', // Column configuration not to be checked
-                name: record.name,
-            }),
-        }
         return (
             <Fragment>
                 <PageHeader
@@ -113,7 +86,7 @@ class sortConList extends Component {
                 subTitle="查看、删除文章"
             /> 
             <div className='sort-table'>
-                <Table rowSelection={rowSelection} columns={this.state.columns} dataSource={this.state.articleList} rowKey='1'/>      
+                <Table columns={this.state.columns} dataSource={this.state.articleList} rowKey='1'/>      
             </div>
             </Fragment>
         )

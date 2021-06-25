@@ -1,16 +1,9 @@
-import React,{Component,Fragment} from 'react'
-import { PageHeader, Input, Row, Col, Button, message} from 'antd';
+import React, { Component, Fragment } from 'react'
 
-import axios from "axios";
+import { requestPost } from '@/api/request'
+import { PageHeader, Input, Row, Col, Button,message } from 'antd';
 
 import './sortAdd.css';
-
-const success = function (con) {
-    message.success(con);
-};
-const error = function (con) {
-    message.error(con);
-};
 class sortAdd extends Component {
     constructor(prop) {
         super(prop)
@@ -23,21 +16,16 @@ class sortAdd extends Component {
     }
     addSort () {
         if (!this.state.inputValue) return false
-        axios({
-			method: 'post',
-            url: "/addSort",
-            data: {
-                sortName: this.state.inputValue,
-                sortTitle: this.state.sortTitleValue
+        const params = {
+            sortName: this.state.inputValue,
+            sortTitle: this.state.sortTitleValue
+        }
+        requestPost('addSort', params).then(resp => {
+            if(resp.status){
+                message.success('创建成功')
+                this.props.history.push({pathname: '/admin/sortList'})
             }
-		}).then((resp) => {
-            console.log(resp);
-            if (resp.data.status){
-                success('添加成功')
-            }
-		}, (err) => {
-			error('添加失败')
-		});
+        })
     }
     inputChange (e) {
         const inputValue = e.target.value

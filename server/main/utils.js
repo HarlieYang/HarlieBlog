@@ -1,18 +1,11 @@
 /*
  * @Author: your name
- * @Date: 2021-06-25 11:36:00
- * @LastEditTime: 2021-06-25 15:16:21
+ * @Date: 2021-06-25 15:20:14
+ * @LastEditTime: 2021-06-25 15:28:05
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: /HarlieBlog/src/utils/utils.js
+ * @FilePath: /HarlieBlog/server/main/utils.js
  */
-const success = function (con) {
-    message.success(con);
-};
-const error = function (con) {
-    message.error(con);
-};
-
 function getCurrentDate() {
     var now = new Date();
     var year = now.getFullYear(); //得到年份
@@ -30,11 +23,9 @@ function getCurrentDate() {
     if (sec < 10) sec = "0" + sec;
     var time = "";
     time = year + "-" + month + "-" + date+ " " + hour + ":" + minu + ":" + sec;
+    console.log('time',time)
     return time;
 }
-
-export default {
-    success,
-    error,
-    getCurrentDate
+module.exports.getCurrentDateFn = () =>{
+    return getCurrentDate()
 }

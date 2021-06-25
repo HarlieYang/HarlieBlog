@@ -12,9 +12,22 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+.blog{
+  display: flex;
+  justify-content: space-between;
+}
 .content{
   width: 65%;
   height: 100vh;
   overflow-y: scroll;
   padding: 45px 35px;
+}
+.container{
+  width: calc(100vw - 200px);
+  box-sizing: border-box;
+}
+.container.font{
+  width: 65%;
+  height: 100vh;
+  overflow: scroll;
 }

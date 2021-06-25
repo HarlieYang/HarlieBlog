@@ -1,7 +1,7 @@
 /*
  * @Author: HarlieYang
  * @Date: 2021-06-23 10:01:03
- * @LastEditTime: 2021-06-24 10:41:44
+ * @LastEditTime: 2021-06-25 15:33:16
  * @LastEditors: Please set LastEditors
  * @Description: sequelize 统一Model的定义
  * @FilePath: /HarlieBlog/server/main/db/db.js
@@ -65,11 +65,11 @@ const defineModel = (name, attributes) => {
         primaryKey: true
     };
     attrs.createdAt = {
-        type: Sequelize.BIGINT,
+        type: Sequelize.STRING,
         allowNull: false
     };
     attrs.updatedAt = {
-        type: Sequelize.BIGINT,
+        type: Sequelize.STRING,
         allowNull: false
     };
     
@@ -78,15 +78,10 @@ const defineModel = (name, attributes) => {
         timestamps: false,
         hooks: {
             beforeValidate: (obj) => {
-                let now = Date.now();
                 if (obj.isNewRecord) {
                     if (!obj.id) {
                         obj.id = generateId();
                     }
-                    obj.createdAt = now;
-                    obj.updatedAt = now;
-                } else {
-                    obj.updatedAt = Date.now();
                 }
             }
         }

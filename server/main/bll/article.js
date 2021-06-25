@@ -1,12 +1,12 @@
-const now = Date.now()
 const H_article  = require('../db/models/H_article')
+const utils = require('../utils')
 
 const queryArticle = async ( params, sort_id = null ) => {
     const query = sort_id ? await H_article.findAll({ where: { sort_id: sort_id} }) : await H_article.findAll()
-    if (query.length > 0) {
-        return query
+    if (query.length>0) {
+        return {status: 200 , data: query}
     } else {
-        return []
+        return {status: 200, data: []}
     }
 };
 
@@ -18,12 +18,12 @@ const addArticle = async ( title, content, url, sortId ) => {
         content,
         url,
         sortId,
-        createdAt: now,
-        updatedAt: now
+        createdAt: utils.getCurrentDateFn(),
+        updatedAt: utils.getCurrentDateFn()
     });
     // 
     const status = data.id ? true: false
-    return {status}
+    return {status }
 }
 
 const updateArticle = async ( params, id ) => {

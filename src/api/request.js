@@ -4,9 +4,9 @@ import {Api} from './api'
 axios.defaults.headers.post['Content-Type'] = 'text/plain'
 
 // todo 更细化的操作
-export const requestPost = (fun,kwargs = {}) => {
-    const api = 'http://127.0.0.0:7000'
-    return axios.post( api + Api[fun], kwargs )
+export const requestPost = (fun,kwargs = {}, method = 'post') => {
+    const api = process.env.NODE_ENV === 'development' ? '' :'http://127.0.0.0:7000'
+    return axios[method]( api + Api[fun], kwargs )
     .then((res) => {
         let data
         switch(res.status){

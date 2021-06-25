@@ -1,9 +1,10 @@
 import React,{Component,Fragment} from 'react'
 import { PageHeader, Input, Row, Col, Button, Select, message, Upload, Icon} from 'antd';
 
-import TencentOSS from '../../../api/uploadOss'
+import TencentOSS from '@/api/uploadOss'
 
-import axios from "axios";
+import { requestPost } from "@/api/request";
+
 import BraftEditor from 'braft-editor'
 import { ContentUtils } from 'braft-utils'
 
@@ -13,12 +14,7 @@ import './articleAdd.css';
 
 const {Option} = Select
 
-const success = function (con) {
-    message.success(con);
-};
-const error = function (con) {
-    message.error(con);
-};
+
 
 class sortConAdd extends Component {
     constructor(prop) {
@@ -64,18 +60,13 @@ class sortConAdd extends Component {
 
     // 获取类目列表
     getSort = () => {
-        axios({
-			method: 'get',
-			url: "/getSort"
-		}).then((resp) => {
+        requestPost('getSort', '', 'get').then(( resp => {
             if (resp.status === 200){
                 this.setState({
                     sortList: resp.data
                 })
             }
-		}, (err) => {
-			console.log(err);
-		});
+        }))
     }
 
     // 编辑器上传图片功能
@@ -86,7 +77,6 @@ class sortConAdd extends Component {
             const url = await fileTencentOSS.upload_file_locality(value.file)
             if(url){
                 message.success('上传成功')
-                console.log('url',url)
                 const editorState = ContentUtils.insertMedias( this.state.editorState, [
                     {
                         type: 'IMAGE',
@@ -104,6 +94,9 @@ class sortConAdd extends Component {
     submitContent = async () => {
         
     }
+    onTitleChange(e) {
+        this.setState({ titleValue: e.target.value})
+    }
     // 编辑器change事件
     handleEditorChange = (editorState) => {
         this.setState({ editorState: editorState})
@@ -112,21 +105,17 @@ class sortConAdd extends Component {
     // 添加文章
     addArticle () {
         if (!this.state.sortId) return false
-        axios({
-			method: 'post',
-            url: "/addArticle",
-            data: {
-                sort_id: this.state.sortId,
-                title: this.state.titleValue,
-                content: this.state.editorState.toHTML()
+        const params = {
+            sortId: this.state.sortId,
+            title: this.state.titleValue,
+            content: this.state.editorState.toHTML()
+        }
+        requestPost('addArticle', params).then(resp => {
+            if(resp.status) {
+                message.success('文章添加成功')
+                this.props.history.push({pathname: '/admin/articlelist'})
             }
-		}).then((resp) => {
-            if (resp.data.status){
-                success('添加成功')
-            }
-		}, (err) => {
-			error('添加失败')
-		});
+        })
     }
     // 获取类目
     onChange (value) {
@@ -164,7 +153,7 @@ class sortConAdd extends Component {
                             {
                                 this.state.sortList.map(item => {
                                     return(
-                                        <Option value={item.id}>{item.sort_name}</Option>
+                                        <Option value={item.id}>{item.sortName}</Option>
                                     )
                                 })
                             }
@@ -177,7 +166,7 @@ class sortConAdd extends Component {
                             <span className='label-sort-name'>文章标题：</span>
                         </Col>
                         <Col span={11}>
-                            <Input placeholder="输入标题" ref = {(value) => { this.titleValue = value}}/>
+                            <Input placeholder="输入标题" onChange={this.onTitleChange.bind(this)}/>
                         </Col>
                     </Row>
                     <Row style={{marginTop: 20}}>
@@ -198,7 +187,7 @@ class sortConAdd extends Component {
                         <Col span={12}></Col>
                         <Col span={4}>
                             <div className='submit-btn'>
-                                <Button type="primary" htmlType="submit" onClick={this.addSortCon.bind(this)}>
+                                <Button type="primary" htmlType="submit" onClick={this.addArticle.bind(this)}>
                                     添加
                                 </Button>
                             </div>

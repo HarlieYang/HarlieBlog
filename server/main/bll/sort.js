@@ -1,12 +1,12 @@
-const now = Date.now()
 const H_sort  = require('../db/models/H_sort')
+const utils = require('../utils')
 
 const querySort = async () => {
     const query = await H_sort.findAll()
     if (query.length>0) {
-        return query
+        return {status: 200 , data: query}
     } else {
-        return []
+        return {status: 200, data: []}
     }
     
 };
@@ -15,12 +15,12 @@ const addSort = async ( sortName, sortTitle ) => {
     const data = await H_sort.create({
         sortName,
         sortTitle,
-        createdAt: now,
-        updatedAt: now
+        createdAt: utils.getCurrentDateFn(),
+        updatedAt: utils.getCurrentDateFn()
     });
     
     const status = data.id ? true : false
-    return {status}
+    return { status } 
 }
 
 const updateSort = async ( params, id ) => {
