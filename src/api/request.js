@@ -7,7 +7,7 @@ axios.defaults.headers.post['Content-Type'] = 'text/plain'
 export const requestPost = (fun,kwargs = {}, method = 'post') => {
     console.log('kwargs',kwargs)
     
-    const api = process.env.NODE_ENV === 'development' ? '' :'http://127.0.0.0:7000'
+    const api = process.env.NODE_ENV === 'development' ? '/api' :'http://42.192.37.59:7001'
     return axios[method](  api + Api[fun],  kwargs )
     .then((res) => {
         let data
