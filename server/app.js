@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-06-23 10:01:03
+ * @LastEditTime: 2021-07-08 11:12:02
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /HarlieBlog/server/app.js
+ */
 const express = require('express')
 const bodyParser = require('body-parser')
 
@@ -20,6 +28,8 @@ app.all('*', function(req, res, next) {
     
 app.use('/', router)
 
-app.listen(7000,function(){
-    console.log('服务器已经启动,通过http://127.0.0.1:7001来访问')
-})
+const PORT = 7000;
+const HOST = '0.0.0.0';
+app.listen(PORT, HOST, () => {
+    console.log('服务器已经启动,通过http://localhost:7000来访问')
+});
